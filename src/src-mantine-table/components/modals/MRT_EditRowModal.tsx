@@ -80,17 +80,17 @@ export const MRT_EditRowModal = <TData extends MRT_RowData>({
           row,
           table,
         })) ?? (
-        <>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <Stack gap="lg" pb={24} pt={16}>
-              {internalEditComponents}
-            </Stack>
-          </form>
-          <Flex justify="flex-end">
-            <MRT_EditActionButtons row={row} table={table} variant="text" />
-          </Flex>
-        </>
-      )}
+          <>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <Stack gap="lg" pb={24} pt={16}>
+                {internalEditComponents}
+              </Stack>
+            </form>
+            <Flex justify="flex-end">
+              <MRT_EditActionButtons row={row} table={table} variant="icon" />
+            </Flex>
+          </>
+        )}
     </Modal>
   );
 };

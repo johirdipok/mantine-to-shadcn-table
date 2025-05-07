@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/sidebar";
 import {
   MantineReactTable,
-  MRT_ColumnDef,
-  useMantineReactTable,
+  MRT_ColumnDef
 } from "@/src-mantine-table";
 import { MantineProvider } from "@mantine/core";
+
 
 export default function App() {
   return (
@@ -53,7 +53,7 @@ export default function App() {
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div> */}
             <DemoCopyButton />
-            <Example />
+            <ExampleMantineTable />
             <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
           </div>
         </SidebarInset>
@@ -133,7 +133,7 @@ export const data: Person[] = [
   },
 ];
 
-const Example = () => {
+const ExampleMantineTable = () => {
   const columns = useMemo<MRT_ColumnDef<Person>[]>(
     () => [
       {
@@ -158,11 +158,34 @@ const Example = () => {
     [],
   );
 
-  const table = useMantineReactTable({
-    columns,
-    data,
-    paginationDisplayMode: 'default',
-  });
 
-  return <MantineReactTable table={table} />;
+  const handleSaveRow = async ({
+    table,
+    row,
+    values,
+  }) => {
+    //if using flat data and simple accessorKeys/ids, you can just do a simple assignment here.
+    console.log(table.getState())
+
+  };
+
+  // const table = useMantineReactTable({
+  //   columns,
+  //   data,
+  //   paginationDisplayMode: 'default',
+  //   editDisplayMode="row",
+  //   enableEditing,
+  //   onEditingRowSave={ handleSaveRow }
+  //   // enableTopToolbar: false,
+  //   // enableBottomToolbar: false,
+  // });
+
+  return <MantineReactTable columns={columns}
+    data={data}
+    editDisplayMode="modal" //default
+    enableEditing
+    onEditingRowSave={handleSaveRow} />;
 };
+
+
+

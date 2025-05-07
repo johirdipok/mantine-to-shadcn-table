@@ -1,9 +1,12 @@
-import clsx from 'clsx';
 
 import classes from './MRT_EditActionButtons.module.css';
 
-import { ActionIcon, Box, type BoxProps, Button, Tooltip } from '@mantine/core';
+import { type BoxProps } from '@mantine/core';
 
+import { ReusableToolTip } from '@/components/reusable/resusable-tooltip';
+import { Button } from '@/components/ui/button';
+import { Card, CardAction } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import {
   type MRT_Row,
   type MRT_RowData,
@@ -83,45 +86,52 @@ export const MRT_EditActionButtons = <TData extends MRT_RowData>({
   };
 
   return (
-    <Box
-      className={clsx('mrt-edit-action-buttons', classes.root)}
+    <Card
+      className={cn('mrt-edit-action-buttons', classes.root)}
       onClick={(e) => e.stopPropagation()}
       {...rest}
     >
-      {variant === 'icon' ? (
-        <>
-          <Tooltip label={localization.cancel} withinPortal>
-            <ActionIcon
-              aria-label={localization.cancel}
-              color="red"
-              onClick={handleCancel}
-              variant="subtle"
-            >
-              <IconCircleX />
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label={localization.save} withinPortal>
-            <ActionIcon
-              aria-label={localization.save}
-              color="blue"
-              loading={isSaving}
-              onClick={handleSubmitRow}
-              variant="subtle"
-            >
-              <IconDeviceFloppy />
-            </ActionIcon>
-          </Tooltip>
-        </>
-      ) : (
-        <>
-          <Button onClick={handleCancel} variant="subtle">
-            {localization.cancel}
-          </Button>
-          <Button loading={isSaving} onClick={handleSubmitRow} variant="filled">
-            {localization.save}
-          </Button>
-        </>
-      )}
-    </Box>
+      <CardAction>
+
+        {variant === 'icon' ? (
+          <>
+            <ReusableToolTip content={localization.cancel}>
+              <Button variant='ghost' size='icon' aria-label={localization.cancel}
+                color="red"
+                onClick={handleCancel}
+              >
+                <IconCircleX />
+              </Button>
+            </ReusableToolTip>
+
+
+            <ReusableToolTip content={localization.cancel}>
+              <Button variant='ghost' size='icon'
+                aria-label={localization.save}
+                // loading={isSaving}
+                className='text-blue-500'
+                disabled={isSaving}
+                onClick={handleSubmitRow}
+              >
+                <IconDeviceFloppy />
+              </Button>
+            </ReusableToolTip>
+          </>
+        ) : (
+          <>
+            <Button onClick={handleCancel} variant="ghost">
+              {localization.cancel}
+            </Button>
+            <Button
+              // loading={isSaving}
+              disabled={isSaving}
+              onClick={handleSubmitRow} >
+              {localization.save}
+            </Button>
+          </>
+        )}
+      </CardAction>
+
+    </Card>
   );
 };
