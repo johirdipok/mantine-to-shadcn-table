@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -16,8 +17,10 @@ import {
 } from "@/components/ui/sidebar";
 import {
   MantineReactTable,
-  MRT_ColumnDef
+  MRT_ColumnDef,
+  useMantineReactTable
 } from "@/src-mantine-table";
+import { LoadingOverlay } from "@/Test/LoadingOverlay";
 import { MantineProvider } from "@mantine/core";
 
 
@@ -53,6 +56,11 @@ export default function App() {
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div> */}
             <DemoCopyButton />
+            <div className="relative" >
+              <div className="min-h-[100vh] flex-1 rounded-xl bg-primary " />
+              <LoadingOverlay visible={true} />
+            </div>
+
             <ExampleMantineTable />
             <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
           </div>
@@ -169,22 +177,29 @@ const ExampleMantineTable = () => {
 
   };
 
-  // const table = useMantineReactTable({
-  //   columns,
-  //   data,
-  //   paginationDisplayMode: 'default',
-  //   editDisplayMode="row",
-  //   enableEditing,
-  //   onEditingRowSave={ handleSaveRow }
-  //   // enableTopToolbar: false,
-  //   // enableBottomToolbar: false,
-  // });
-
-  return <MantineReactTable columns={columns}
-    data={data}
-    editDisplayMode="modal" //default
-    enableEditing
-    onEditingRowSave={handleSaveRow} />;
+  const table = useMantineReactTable({
+    columns,
+    data,
+    enableRowActions: true,
+    renderRowActionMenuItems: ({ row }) => (
+      <DropdownMenuItem onClick={() => console.info('Edit')} > Delete</DropdownMenuItem>
+    )
+    // positionActionsColumn: 'first',
+    // renderRowActionMenuItems: ({ row }) => (
+    //   <>
+    //     <Menu.Item onClick={() => console.info('Edit')}>Edit</Menu.Item>
+    //     <Menu.Item onClick={() => console.info('Delete')}>Delete</Menu.Item>
+    //   </>
+    // ),
+    // enableTopToolbar: false,
+    // enableBottomToolbar: false,
+  });
+  return <MantineReactTable table={table} />
+  // return <MantineReactTable columns={columns}
+  //   data={data}
+  //   editDisplayMode="row" //default
+  //   enableEditing
+  //   onEditingRowSave={handleSaveRow} />;
 };
 
 

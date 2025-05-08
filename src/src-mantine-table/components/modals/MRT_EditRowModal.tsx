@@ -1,5 +1,6 @@
-import { Flex, Modal, type ModalProps, Stack } from '@mantine/core';
 
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/components/ui/dialog';
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
   type MRT_Row,
   type MRT_RowData,
@@ -8,8 +9,7 @@ import {
 import { parseFromValuesOrFunc } from '../../utils/utils';
 import { MRT_EditActionButtons } from '../buttons/MRT_EditActionButtons';
 import { MRT_EditCellTextInput } from '../inputs/MRT_EditCellTextInput';
-
-interface Props<TData extends MRT_RowData> extends Partial<ModalProps> {
+interface Props<TData extends MRT_RowData> {
   open: boolean;
   table: MRT_TableInstance<TData>;
 }
@@ -62,35 +62,48 @@ export const MRT_EditRowModal = <TData extends MRT_RowData>({
   };
 
   return (
-    <Modal
-      opened={open}
+    <Dialog
+      open={open}
       withCloseButton={false}
       {...modalProps}
       key={row.id}
-      onClose={handleCancel}
+      onOpenChange={handleCancel}
+
     >
-      {((creatingRow &&
-        renderCreateRowModalContent?.({
-          internalEditComponents,
-          row,
-          table,
-        })) ||
-        renderEditRowModalContent?.({
-          internalEditComponents,
-          row,
-          table,
-        })) ?? (
-          <>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <Stack gap="lg" pb={24} pt={16}>
-                {internalEditComponents}
-              </Stack>
-            </form>
-            <Flex justify="flex-end">
-              <MRT_EditActionButtons row={row} table={table} variant="icon" />
-            </Flex>
-          </>
-        )}
-    </Modal>
+      {/* TODO
+        - Add a useful Dialog Title
+        - Add a useful Dialog Description
+      */}
+      <VisuallyHidden><DialogTitle>Table Form</DialogTitle></VisuallyHidden>
+      <DialogContent>
+        <VisuallyHidden><DialogDescription>
+          Make changes to your profile here. Click save when you're done.
+        </DialogDescription></VisuallyHidden>
+
+        {((creatingRow &&
+          renderCreateRowModalContent?.({
+            internalEditComponents,
+            row,
+            table,
+          })) ||
+          renderEditRowModalContent?.({
+            internalEditComponents,
+            row,
+            table,
+          })) ?? (
+            <>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <div className='flex flex-col gap-5 pb-6 pt-4'>
+                  {internalEditComponents}
+                </div>
+              </form>
+              <DialogFooter>
+                <MRT_EditActionButtons row={row} table={table} variant="icon" />
+              </DialogFooter>
+            </>
+          )}
+      </DialogContent>
+
+    </Dialog>
   );
 };

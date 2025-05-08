@@ -1,19 +1,12 @@
-
-import classes from './MRT_EditActionButtons.module.css';
-
-import { type BoxProps } from '@mantine/core';
-
 import { ReusableToolTip } from '@/components/reusable/resusable-tooltip';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 import {
   type MRT_Row,
   type MRT_RowData,
   type MRT_TableInstance,
 } from '../../types';
 
-interface Props<TData extends MRT_RowData> extends BoxProps {
+interface Props<TData extends MRT_RowData> {
   row: MRT_Row<TData>;
   table: MRT_TableInstance<TData>;
   variant?: 'icon' | 'text';
@@ -86,25 +79,22 @@ export const MRT_EditActionButtons = <TData extends MRT_RowData>({
   };
 
   return (
-    <Card
-      className={cn('mrt-edit-action-buttons', classes.root)}
-      onClick={(e) => e.stopPropagation()}
+    <div
+      className='flex gap-2.5'
+      // onClick={(e) => e.stopPropagation()}
       {...rest}
     >
-      <CardAction>
-
+      <div>
         {variant === 'icon' ? (
           <>
-            <ReusableToolTip content={localization.cancel}>
+            <ReusableToolTip content={localization.cancel}  >
               <Button variant='ghost' size='icon' aria-label={localization.cancel}
-                color="red"
+                className='text-red-500'
                 onClick={handleCancel}
               >
                 <IconCircleX />
               </Button>
             </ReusableToolTip>
-
-
             <ReusableToolTip content={localization.cancel}>
               <Button variant='ghost' size='icon'
                 aria-label={localization.save}
@@ -130,8 +120,7 @@ export const MRT_EditActionButtons = <TData extends MRT_RowData>({
             </Button>
           </>
         )}
-      </CardAction>
-
-    </Card>
+      </div>
+    </div>
   );
 };

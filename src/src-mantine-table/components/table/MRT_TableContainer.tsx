@@ -1,13 +1,13 @@
-import clsx from 'clsx';
 
 import classes from './MRT_TableContainer.module.css';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { CSSProperties, useEffect, useLayoutEffect, useState } from 'react';
 
-import { Box, type BoxProps, LoadingOverlay } from '@mantine/core';
+import { LoadingOverlay } from '@mantine/core';
 
 import { MRT_Table } from './MRT_Table';
 
+import { cn } from '@/lib/utils';
 import { type MRT_RowData, type MRT_TableInstance } from '../../types';
 import { parseFromValuesOrFunc } from '../../utils/utils';
 import { MRT_EditRowModal } from '../modals/MRT_EditRowModal';
@@ -15,7 +15,7 @@ import { MRT_EditRowModal } from '../modals/MRT_EditRowModal';
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-interface Props<TData extends MRT_RowData> extends BoxProps {
+interface Props<TData extends MRT_RowData> {
   table: MRT_TableInstance<TData>;
 }
 
@@ -71,19 +71,18 @@ export const MRT_TableContainer = <TData extends MRT_RowData>({
   const editModalOpen = editDisplayMode === 'modal' && editingRow;
 
   return (
-    <Box
+    <div
       {...tableContainerProps}
-      __vars={{
-        '--mrt-top-toolbar-height': `${totalToolbarHeight}`,
-        ...tableContainerProps?.__vars,
-      }}
-      className={clsx(
-        'mrt-table-container',
-        classes.root,
+      className={cn(
+        'mrt-table-container max-w-full overflow-auto relative ',
         enableStickyHeader && classes['root-sticky'],
         isFullScreen && classes['root-fullscreen'],
         tableContainerProps?.className,
       )}
+      style={{
+        ...tableContainerProps?.__vars,
+        '--mrt-top-toolbar-height': `${totalToolbarHeight}px`,
+      } as unknown as CSSProperties}
       ref={(node: HTMLDivElement) => {
         if (node) {
           tableContainerRef.current = node;
@@ -94,6 +93,7 @@ export const MRT_TableContainer = <TData extends MRT_RowData>({
         }
       }}
     >
+
       <LoadingOverlay
         visible={isLoading || showLoadingOverlay}
         zIndex={2}
@@ -103,6 +103,6 @@ export const MRT_TableContainer = <TData extends MRT_RowData>({
       {(createModalOpen || editModalOpen) && (
         <MRT_EditRowModal open table={table} />
       )}
-    </Box>
+    </div>
   );
 };

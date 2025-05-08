@@ -1,9 +1,6 @@
 
 import classes from './MRT_TablePaper.module.css';
 
-
-import { MRT_TableContainer } from './MRT_TableContainer';
-
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import '@mantine/core/styles.css';
@@ -11,6 +8,7 @@ import { type MRT_RowData, type MRT_TableInstance } from '../../types';
 import { parseFromValuesOrFunc } from '../../utils/utils';
 import { MRT_BottomToolbar } from '../toolbar/MRT_BottomToolbar';
 import { MRT_TopToolbar } from '../toolbar/MRT_TopToolbar';
+import { MRT_TableContainer } from './MRT_TableContainer';
 interface Props<TData extends MRT_RowData> {
   table: MRT_TableInstance<TData>;
 }
