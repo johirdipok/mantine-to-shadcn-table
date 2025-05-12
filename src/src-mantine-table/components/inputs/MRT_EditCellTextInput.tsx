@@ -1,13 +1,4 @@
-import { type FocusEvent, type KeyboardEvent, useState } from 'react';
-
-import {
-  MultiSelect,
-  type MultiSelectProps,
-  Select,
-  type SelectProps,
-  TextInput,
-  type TextInputProps,
-} from '@mantine/core';
+import { type FocusEvent, type KeyboardEvent, useState } from "react";
 
 import {
   type HTMLPropsRef,
@@ -15,30 +6,37 @@ import {
   type MRT_CellValue,
   type MRT_RowData,
   type MRT_TableInstance,
-} from '../../types';
-import { parseFromValuesOrFunc } from '../../utils/utils';
+} from "../../types";
+import { parseFromValuesOrFunc } from "../../utils/utils";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-interface PropsTextInput<TData extends MRT_RowData, TValue = MRT_CellValue>
-  extends TextInputProps {
+interface PropsTextInput<TData extends MRT_RowData, TValue = MRT_CellValue> {
   cell: MRT_Cell<TData, TValue>;
   table: MRT_TableInstance<TData>;
 }
 
-interface PropsSelect<TData extends MRT_RowData, TValue = MRT_CellValue>
-  extends SelectProps {
+interface PropsSelect<TData extends MRT_RowData, TValue = MRT_CellValue> {
   cell: MRT_Cell<TData, TValue>;
   table: MRT_TableInstance<TData>;
 }
 
-interface PropsMultiSelect<TData extends MRT_RowData, TValue = MRT_CellValue>
-  extends MultiSelectProps {
+interface PropsMultiSelect<TData extends MRT_RowData, TValue = MRT_CellValue> {
   cell: MRT_Cell<TData, TValue>;
   table: MRT_TableInstance<TData>;
 }
 
-type MRT_TextInputProps = HTMLPropsRef<HTMLInputElement> & TextInputProps;
-type MRT_SelectProps = HTMLPropsRef<HTMLInputElement> & SelectProps;
-type MRT_MultiSelectProps = HTMLPropsRef<HTMLInputElement> & MultiSelectProps;
+type MRT_TextInputProps = HTMLPropsRef<HTMLInputElement>;
+type MRT_SelectProps = HTMLPropsRef<HTMLInputElement>;
+type MRT_MultiSelectProps = HTMLPropsRef<HTMLInputElement>;
 
 export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
   cell,
@@ -64,8 +62,8 @@ export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
 
   const isCreating = creatingRow?.id === row.id;
   const isEditing = editingRow?.id === row.id;
-  const isSelectEdit = columnDef.editVariant === 'select';
-  const isMultiSelectEdit = columnDef.editVariant === 'multi-select';
+  const isSelectEdit = columnDef.editVariant === "select";
+  const isMultiSelectEdit = columnDef.editVariant === "multi-select";
 
   const [value, setValue] = useState(() => cell.getValue<any>());
 
@@ -91,19 +89,18 @@ export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
       setEditingRow(row);
     }
   };
-
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    textInputProps.onBlur?.(event);
+  const handleBlur = (data) => {
+    textInputProps.onBlur?.(data);
     saveInputValueToRowCache(value);
     setEditingCell(null);
   };
 
-  const handleEnterKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    textInputProps.onKeyDown?.(event);
-    if (event.key === 'Enter') {
-      editInputRefs.current[cell.id]?.blur();
-    }
-  };
+  // const handleEnterKeyDown = (data) => {
+  //   textInputProps.onKeyDown?.(data);
+  //   if (event.key === "Enter") {
+  //     editInputRefs.current[cell.id]?.blur();
+  //   }
+  // };
 
   if (columnDef.Edit) {
     return columnDef.Edit?.({ cell, column, row, table });
@@ -111,7 +108,7 @@ export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
 
   const commonProps = {
     disabled: parseFromValuesOrFunc(columnDef.enableEditing, row) === false,
-    label: ['custom', 'modal'].includes(
+    label: ["custom", "modal"].includes(
       (isCreating ? createDisplayMode : editDisplayMode) as string,
     )
       ? column.columnDef.header
@@ -121,79 +118,90 @@ export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
       e.stopPropagation();
       textInputProps?.onClick?.(e);
     },
-    placeholder: !['custom', 'modal'].includes(
+    placeholder: !["custom", "modal"].includes(
       (isCreating ? createDisplayMode : editDisplayMode) as string,
     )
       ? columnDef.header
       : undefined,
     value,
-    variant: editDisplayMode === 'table' ? 'unstyled' : 'default',
+    variant: editDisplayMode === "table" ? "unstyled" : "default",
   } as const;
 
   if (isSelectEdit) {
     return (
       <Select
         {...commonProps}
-        searchable
         value={value as any}
         {...(selectProps as MRT_SelectProps)}
-        onBlur={handleBlur}
-        onChange={(value, option) => {
-          (selectProps as MRT_SelectProps).onChange?.(value as any, option);
+        onValueChange={(value) => {
+          (selectProps as MRT_SelectProps).onChange?.(value as any);
           setValue(value);
         }}
-        onClick={(e) => {
-          e.stopPropagation();
-          selectProps?.onClick?.(e);
-        }}
-        ref={(node) => {
-          if (node) {
-            editInputRefs.current[cell.id] = node;
-            if (selectProps.ref) {
-              selectProps.ref.current = node;
+      >
+        <SelectTrigger
+          className="w-[180px]"
+          onBlur={handleBlur}
+          ref={(node) => {
+            if (node) {
+              editInputRefs.current[cell.id] = node;
+              if (selectProps.ref) {
+                selectProps.ref.current = node;
+              }
             }
-          }
-        }}
-      />
+          }}
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {/* <SelectItem value={value}>{value}</SelectItem> */}
+            <SelectItem value="apple">Apple</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="blueberry">Blueberry</SelectItem>
+            <SelectItem value="grapes">Grapes</SelectItem>
+            <SelectItem value="pineapple">Pineapple</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     );
   }
 
   if (isMultiSelectEdit) {
-    return (
-      <MultiSelect
-        {...commonProps}
-        searchable
-        value={value}
-        {...(selectProps as MRT_MultiSelectProps)}
-        onBlur={handleBlur}
-        onChange={(newValue) => {
-          (selectProps as MRT_MultiSelectProps).onChange?.(value as any);
-          setValue(newValue);
-          // Save if not in focus, otherwise it will be handled by onBlur
-          if (document.activeElement === editInputRefs.current[cell.id]) return;
-          saveInputValueToRowCache(newValue as any);
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          selectProps?.onClick?.(e);
-        }}
-        ref={(node) => {
-          if (node) {
-            editInputRefs.current[cell.id] = node;
-            if (selectProps.ref) {
-              selectProps.ref.current = node;
-            }
-          }
-        }}
-      />
-    );
+    return;
+    <h1>Use MultiSelect </h1>;
+    // <MultiSelect
+    //   {...commonProps}
+    //   searchable
+    //   value={value}
+    //   {...(selectProps as MRT_MultiSelectProps)}
+    //   onBlur={handleBlur}
+    //   onChange={(newValue) => {
+    //     (selectProps as MRT_MultiSelectProps).onChange?.(value as any);
+    //     setValue(newValue);
+    //     // Save if not in focus, otherwise it will be handled by onBlur
+    //     if (document.activeElement === editInputRefs.current[cell.id]) return;
+    //     saveInputValueToRowCache(newValue as any);
+    //   }}
+    //   onClick={(e) => {
+    //     e.stopPropagation();
+    //     selectProps?.onClick?.(e);
+    //   }}
+    //   ref={(node) => {
+    //     if (node) {
+    //       editInputRefs.current[cell.id] = node;
+    //       if (selectProps.ref) {
+    //         selectProps.ref.current = node;
+    //       }
+    //     }
+    //   }}
+    // />
+    //);
   }
-
   return (
-    <TextInput
+    <Input
       {...commonProps}
-      onKeyDown={handleEnterKeyDown}
-      value={value ?? ''}
+      // onKeyDown={handleEnterKeyDown}
+      value={value ?? ""}
       {...textInputProps}
       onBlur={handleBlur}
       onChange={(event) => {

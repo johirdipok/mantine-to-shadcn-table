@@ -5,18 +5,18 @@ import classes from './MRT_FilterTextInput.module.css';
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
-  ActionIcon,
   Autocomplete,
   Badge,
   Box,
   MultiSelect,
   Select,
-  TextInput,
-  type TextInputProps,
+  type TextInputProps
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useDebouncedValue } from '@mantine/hooks';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { localizedFilterOption } from '../../fns/filterFns';
 import {
   type MRT_Header,
@@ -123,10 +123,10 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
         selectProps?.data ??
         multiSelectProps?.data ??
         ((isAutoCompleteFilter || isSelectFilter || isMultiSelectFilter) &&
-        facetedUniqueValues
+          facetedUniqueValues
           ? Array.from(facetedUniqueValues.keys())
-              .filter((key) => key !== null)
-              .sort((a, b) => a.localeCompare(b))
+            .filter((key) => key !== null)
+            .sort((a, b) => a.localeCompare(b))
           : [])
       )
         //@ts-ignore
@@ -149,8 +149,8 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
       ? (column.getFilterValue() as string[]) || []
       : isRangeFilter
         ? (column.getFilterValue() as [string, string])?.[
-            rangeFilterIndex as number
-          ] || ''
+        rangeFilterIndex as number
+        ] || ''
         : ((column.getFilterValue() as string) ?? ''),
   );
 
@@ -259,16 +259,18 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
   } as const;
 
   const ClearButton = filterValue ? (
-    <ActionIcon
+    <Button
       aria-label={localization.clearFilter}
-      color="var(--mantine-color-gray-7)"
-      onClick={handleClear}
+      className="text-gray-700"
       size="sm"
-      title={localization.clearFilter ?? ''}
-      variant="transparent"
+      onClick={handleClear}
+      // title={localization.clearFilter ?? ''}
+
+      variant="ghost"
+
     >
       <IconX />
-    </ActionIcon>
+    </Button>
   ) : null;
 
   if (columnDef.Filter) {
@@ -393,11 +395,12 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
     );
   }
 
+
   return (
-    <TextInput
+
+    <Input
       {...commonProps}
       onChange={(e) => setFilterValue(e.target.value)}
-      rightSection={filterValue?.toString()?.length ? ClearButton : undefined}
       {...textInputProps}
       className={clsx(className, textInputProps.className)}
       mt={0}
@@ -412,5 +415,6 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
       }}
       style={commonProps.style}
     />
+
   );
 };

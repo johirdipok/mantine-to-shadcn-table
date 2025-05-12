@@ -7,7 +7,7 @@ interface LoaderProps {
   className?: string;
 }
 
-interface OverlayProps extends React.HTMLAttributes<HTMLDivElement> { }
+type OverlayProps = React.HTMLAttributes<HTMLDivElement>
 
 interface TransitionProps {
   transition?: 'fade';
@@ -31,6 +31,7 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
 }) => {
   if (!visible) return null;
 
+  // Only apply inline styles for fade transition duration and zIndex
   const fadeStyles =
     transitionProps.transition === 'fade'
       ? {
